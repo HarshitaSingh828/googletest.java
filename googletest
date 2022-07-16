@@ -1,0 +1,62 @@
+import java.util.*;
+import java.io.*;
+public class Main{
+       
+    public static void main(String[]args){
+       Scanner scn = new Scanner(System.in);
+       int N = scn.nextInt();  
+       
+       int[][] edges = new int[4][2];
+       for(int i = 0; i <4; i++){
+           for(int j =0; j <2; j++){
+               edges[i][j] = scn.nextInt();
+           }
+       }
+       
+       int[]A = new int[N];
+       
+       for(int i = 0; i < A.length; i++){
+           A[i] = scn.nextInt();
+           
+       }
+    
+       int ans  = countspecialpairs(N,edges,A);
+       System.out.println(ans);
+       
+    }
+    public static int countspecialpairs(int N, int[][]edges,int[]A){
+        int result =0;
+        ArrayList<Integer> [] graph = new ArrayList[N];
+        for(int i = 0; i < N;i++){
+            graph[i] = new ArrayList<>();
+        }
+        for(int i = 0; i < edges.length; i++){
+            int u = edges[i][0];
+            int v = edges[i][1];
+            
+            graph[u].add(v);
+            graph[v].add(u);
+        }
+        boolean[] vis = new boolean[N];
+        
+        boolean x = DFS(graph,0,A.length-1,vis);
+        
+        if(x == true){
+            result++;
+        }
+        return result;
+    }
+    
+    public static boolean DFS(ArrayList<Integer>[]graph, int src, int dest, boolean[]vis){
+        if(src == dest) return true;
+        vis[src] = true;
+        for(int nbr : graph[src]){
+            if(vis[nbr] == false && src < nbr){
+                boolean y = DFS(graph,nbr,dest,vis);
+                if(y) return true; 
+            }
+        }
+        vis[src] = false;
+        return false;
+    }
+}
